@@ -7,6 +7,7 @@
 #define WC_MENU L"#32768"
 
 #define DELAY 100
+#define INTERVAL 200
 static HANDLE s_hThread = NULL;
 
 typedef enum tagAUTO_CLICK
@@ -192,25 +193,27 @@ ThreadFunc(LPVOID arg)
     POINT pt2 = CenterPoint(&rc2);
 
     AutoClick(AUTO_RIGHT_CLICK, pt1.x, pt1.y);
+    Sleep(INTERVAL);
 
     HWND hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
 
     HWND hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
     ASSERT(hwndMenu1 != hwndMenu2);
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_ESCAPE);
-    ASSERT(GetHitID(hwnd2) == 0);
 
+    Sleep(INTERVAL);
+    ASSERT(GetHitID(hwnd2) == 0);
     HWND hwndMenu0 = FindWindowW(WC_MENU, L"");
-    ASSERT(!hwndMenu0);
+    ASSERT(!IsWindowVisible(hwndMenu0));
 
     AutoClick(AUTO_RIGHT_CLICK, pt1.x, pt1.y);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     RECT rcMenu1;
     GetWindowRect(hwndMenu1, &rcMenu1);
@@ -218,74 +221,82 @@ ThreadFunc(LPVOID arg)
 
     AutoClick(AUTO_LEFT_CLICK, ptMenu1.x, ptMenu1.y);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     AutoClick(AUTO_LEFT_DOUBLE_CLICK, ptMenu1.x, ptMenu1.y);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     AutoClick(AUTO_RIGHT_CLICK, ptMenu1.x, ptMenu1.y);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     AutoClick(AUTO_RIGHT_DOUBLE_CLICK, ptMenu1.x, ptMenu1.y);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu1);
+    ASSERT(IsWindowVisible(hwndMenu1));
 
     POINT pt1_3 = { ptMenu1.x, (2 * rcMenu1.top + 1 * rcMenu1.bottom) / (1 + 2) };
     AutoClick(AUTO_LEFT_CLICK, pt1_3.x, pt1_3.y);
+
+    Sleep(INTERVAL);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(!hwndMenu1);
+    ASSERT(!IsWindowVisible(hwndMenu1));
     ASSERT(GetHitID(hwnd1) == 100);
 
     AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_DOWN);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
+
+    Sleep(INTERVAL);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(!hwndMenu2);
+    ASSERT(!IsWindowVisible(hwndMenu2));
     ASSERT(GetHitID(hwnd2) == 100);
 
     AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_UP);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
+
+    Sleep(INTERVAL);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(!hwndMenu2);
+    ASSERT(!IsWindowVisible(hwndMenu2));
     ASSERT(GetHitID(hwnd2) == 101);
 
     AutoKey(AUTO_KEY_DOWN, VK_SHIFT);
     AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
     AutoKey(AUTO_KEY_UP, VK_SHIFT);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_UP);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
 
     AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
     hwndMenu2 = FindWindowW(WC_MENU, L"");
-    ASSERT(hwndMenu2);
+    ASSERT(IsWindowVisible(hwndMenu2));
     HWND hwndMenu2Sub = FindMenuSub(hwndMenu2);
-    ASSERT(hwndMenu2Sub);
+    ASSERT(IsWindowVisible(hwndMenu2Sub));
 
     AutoClick(AUTO_RIGHT_CLICK, pt1.x, pt1.y);
-    ASSERT(!IsWindow(hwndMenu2Sub));
+    ASSERT(!IsWindowVisible(hwndMenu2Sub));
     AutoKey(AUTO_KEY_DOWN_UP, VK_DOWN);
     AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
+
+    Sleep(INTERVAL);
     hwndMenu1 = FindWindowW(WC_MENU, L"");
-    ASSERT(!hwndMenu1);
+    ASSERT(!IsWindowVisible(hwndMenu1));
 
     PostMessageW(hwnd1, WM_CLOSE, 0, 0);
     PostMessageW(hwnd2, WM_CLOSE, 0, 0);
