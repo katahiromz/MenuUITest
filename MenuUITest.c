@@ -7,7 +7,7 @@
 #define WC_MENU L"#32768"
 
 #define DELAY 100
-#define INTERVAL 200
+#define INTERVAL 500
 static HANDLE s_hThread = NULL;
 
 typedef enum tagAUTO_CLICK
@@ -157,6 +157,23 @@ ThreadFunc(LPVOID arg)
 {
     HWND hwnd = FindWindowW(L"MenuUITest", L"MenuUITest");
     ShowWindow(hwnd, SW_HIDE);
+
+    for (INT i = 0; i < 10; ++i)
+    {
+        HWND hwnd1 = FindWindowW(L"MenuUITestSub", L"#1");
+        if (!hwnd1)
+            break;
+        PostMessage(hwnd1, WM_CLOSE, 0, 0);
+        Sleep(INTERVAL);
+    }
+    for (INT i = 0; i < 10; ++i)
+    {
+        HWND hwnd2 = FindWindowW(L"MenuUITestSub", L"#2");
+        if (!hwnd2)
+            break;
+        PostMessage(hwnd2, WM_CLOSE, 0, 0);
+        Sleep(INTERVAL);
+    }
 
     SHELLEXECUTEINFOW sei = { sizeof(sei), SEE_MASK_FLAG_NO_UI | SEE_MASK_NOCLOSEPROCESS };
 
