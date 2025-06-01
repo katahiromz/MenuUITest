@@ -167,17 +167,21 @@ ThreadFunc(LPVOID arg)
     if (!ShellExecuteExW(&sei))
         ASSERT(0);
     WaitForInputIdle(sei.hProcess, INFINITE);
+    CloseHandle(sei.hProcess);
 
     sei.lpParameters = L"#2";
     if (!ShellExecuteExW(&sei))
         ASSERT(0);
     WaitForInputIdle(sei.hProcess, INFINITE);
+    CloseHandle(sei.hProcess);
 
+    Sleep(INTERVAL);
     HWND hwnd1 = FindWindowW(L"MenuUITestSub", L"#1");
     HWND hwnd2 = FindWindowW(L"MenuUITestSub", L"#2");
     ASSERT(hwnd);
     ASSERT(hwnd1);
     ASSERT(hwnd2);
+    ASSERT(hwnd1 != hwnd2);
 
     RECT rcWork;
     SystemParametersInfoW(SPI_GETWORKAREA, 0, &rcWork, 0);
