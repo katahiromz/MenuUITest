@@ -147,7 +147,7 @@ FindMenuSubProc(HWND hwnd, LPARAM lParam)
 static HWND
 FindMenuSub(HWND hwndMenuTarget)
 {
-    FINDMENUSUB data = { NULL, hwndMenuTarget };
+    FINDMENUSUB data = { hwndMenuTarget, NULL };
     EnumWindows(FindMenuSubProc, (LPARAM)&data);
     return data.hwndMenuSub;
 }
@@ -308,7 +308,7 @@ ThreadFunc(LPVOID arg)
     hwndMenu2 = FindWindowW(WC_MENU, L"");
     ASSERT(IsWindowVisible(hwndMenu2));
     HWND hwndMenu2Sub = FindMenuSub(hwndMenu2);
-    ASSERT(IsWindowVisible(hwndMenu2Sub));
+    ASSERT(IsWindowVisible(hwndMenu2Sub) && hwndMenu2 != hwndMenu2Sub);
 
     AutoClick(AUTO_RIGHT_CLICK, pt1.x, pt1.y);
     ASSERT(!IsWindowVisible(hwndMenu2Sub));
