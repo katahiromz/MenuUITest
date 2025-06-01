@@ -319,6 +319,44 @@ ThreadFunc(LPVOID arg)
     hwndMenu1 = FindWindowW(WC_MENU, L"");
     ASSERT(!IsWindowVisible(hwndMenu1));
 
+    MENUBARINFO mbi = { sizeof(mbi) };
+    GetMenuBarInfo(hwnd1, OBJID_MENU, 0, &mbi);
+
+    INT xMenuBar = mbi.rcBar.left + 16;
+    INT yMenuBar = (mbi.rcBar.top + mbi.rcBar.bottom) / 2;
+    AutoClick(AUTO_LEFT_CLICK, xMenuBar, yMenuBar);
+
+    Sleep(INTERVAL);
+    hwndMenu1 = FindWindowW(WC_MENU, L"");
+    ASSERT(IsWindowVisible(hwndMenu1));
+
+    AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
+
+    Sleep(INTERVAL);
+    ASSERT(!IsWindowVisible(hwndMenu1));
+    hwndMenu2 = FindWindowW(WC_MENU, L"");
+    ASSERT(IsWindowVisible(hwndMenu2));
+    ASSERT(hwndMenu1 != hwndMenu2);
+
+    AutoClick(AUTO_LEFT_CLICK, xMenuBar, yMenuBar);
+
+    Sleep(INTERVAL);
+    ASSERT(!IsWindowVisible(hwndMenu2));
+    hwndMenu1 = FindWindowW(WC_MENU, L"");
+
+    AutoKey(AUTO_KEY_DOWN, VK_SHIFT);
+    AutoClick(AUTO_RIGHT_CLICK, pt2.x, pt2.y);
+    AutoKey(AUTO_KEY_UP, VK_SHIFT);
+
+    ASSERT(!IsWindowVisible(hwndMenu1));
+    AutoKey(AUTO_KEY_DOWN_UP, VK_DOWN);
+    AutoKey(AUTO_KEY_DOWN_UP, VK_DOWN);
+    ASSERT(GetHitID(hwnd2) == 0);
+    AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
+    AutoKey(AUTO_KEY_DOWN_UP, VK_DOWN);
+    AutoKey(AUTO_KEY_DOWN_UP, VK_RETURN);
+    ASSERT(GetHitID(hwnd2) == 101);
+
     PostMessageW(hwnd1, WM_CLOSE, 0, 0);
     PostMessageW(hwnd2, WM_CLOSE, 0, 0);
     ShowWindow(hwnd, SW_SHOWNORMAL);
