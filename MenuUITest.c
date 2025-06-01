@@ -126,7 +126,7 @@ typedef struct tagFINDMENUSUB
 } FINDMENUSUB, *PFINDMENU2SUB;
 
 static BOOL CALLBACK
-EnumWindowsProc(HWND hwnd, LPARAM lParam)
+FindMenuSubProc(HWND hwnd, LPARAM lParam)
 {
     if (!IsWindowVisible(hwnd))
         return TRUE;
@@ -148,7 +148,7 @@ static HWND
 FindMenuSub(HWND hwndMenuTarget)
 {
     FINDMENUSUB data = { NULL, hwndMenuTarget };
-    EnumWindows(EnumWindowsProc, (LPARAM)&data);
+    EnumWindows(FindMenuSubProc, (LPARAM)&data);
     return data.hwndMenuSub;
 }
 
